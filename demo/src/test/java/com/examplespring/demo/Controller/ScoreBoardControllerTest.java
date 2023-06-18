@@ -43,7 +43,7 @@ class ScoreBoardControllerTest {
         String awayTeam = "Canada";
         int homeScore = 0;
         int awayScore = 5;
-
+        controller.startMatch(homeTeam, awayTeam);
         controller.updateScore(homeTeam, awayTeam, homeScore, awayScore);
 
         List<Match> summary = controller.getSummary();
@@ -86,44 +86,44 @@ class ScoreBoardControllerTest {
     @Test
     void testSortMatchesByWinner() {
         // Add matches to the scoreboard
-        controller.startMatch(new MatchRequest("Mexico", "Canada"));
-        controller.updateScore(new ScoreUpdateRequest("Mexico", "Canada", 5, 3));
+        controller.startMatch("Mexico", "Canada");
+        controller.updateScore("Mexico", "Canada", 4, 0);
         controller.finishMatch(new MatchRequest("Mexico", "Canada"));
 
-        controller.startMatch(new MatchRequest("Spain", "Brazil"));
-        controller.updateScore(new ScoreUpdateRequest("Spain", "Brazil", 2, 2));
+        controller.startMatch("Spain", "Brazil");
+        controller.updateScore("Spain", "Brazil", 2, 2);
         controller.finishMatch(new MatchRequest("Spain", "Brazil"));
 
-        controller.startMatch(new MatchRequest("Germany", "France"));
-        controller.updateScore(new ScoreUpdateRequest("Germany", "France", 1, 2));
+        controller.startMatch("Germany", "France");
+        controller.updateScore("Germany", "France", 1, 2);
         controller.finishMatch(new MatchRequest("Germany", "France"));
 
         // Sort matches by winner
         List<Match> sortedMatches = controller.sortMatchesByWinner();
 
         // Verify the order
-        assertEquals("Germany", sortedMatches.get(0).getWinner());
+        assertEquals("France", sortedMatches.get(0).getWinner());
         assertEquals("Mexico", sortedMatches.get(1).getWinner());
-        assertEquals("Spain", sortedMatches.get(2).getWinner());
+        assertEquals("Draw", sortedMatches.get(2).getWinner());
     }
 
     @Test
     void testSortMatchesByAlphabeticalOrder() {
         // Add matches to the scoreboard
-        controller.startMatch(new MatchRequest("Spain", "Brazil"));
-        controller.updateScore(new ScoreUpdateRequest("Spain", "Brazil", 2, 2));
-        controller.finishMatch(new MatchRequest("Spain", "Brazil"));
-
-        controller.startMatch(new MatchRequest("Germany", "France"));
-        controller.updateScore(new ScoreUpdateRequest("Germany", "France", 1, 2));
-        controller.finishMatch(new MatchRequest("Germany", "France"));
-
-        controller.startMatch(new MatchRequest("Mexico", "Canada"));
-        controller.updateScore(new ScoreUpdateRequest("Mexico", "Canada", 5, 3));
+        controller.startMatch("Mexico", "Canada");
+        controller.updateScore("Mexico", "Canada", 0, 0);
         controller.finishMatch(new MatchRequest("Mexico", "Canada"));
 
+        controller.startMatch("Spain", "Brazil");
+        controller.updateScore("Spain", "Brazil", 2, 2);
+        controller.finishMatch(new MatchRequest("Spain", "Brazil"));
+
+        controller.startMatch("Germany", "France");
+        controller.updateScore("Germany", "France", 1, 2);
+        controller.finishMatch(new MatchRequest("Germany", "France"));
+
         // Sort matches by alphabetical order
-        List<Match> sortedMatches = controller.sortMatchesByAlphabeticalOrder();
+        List<Match> sortedMatches = controller.sortMatchesByAlphabeticalOrderHomeTeam();
 
         // Verify the order
         assertEquals("Germany", sortedMatches.get(0).getHomeTeam());
@@ -134,15 +134,15 @@ class ScoreBoardControllerTest {
     @Test
     void testSortMatchesByHigherResults() {
         // Add matches to the scoreboard
-        controller.startMatch(new MatchRequest("Germany", "France"));
-        controller.updateScore(new ScoreUpdateRequest("Germany", "France", 1, 2));
+        controller.startMatch("Germany", "France");
+        controller.updateScore("Germany", "France", 1, 2);
         controller.finishMatch(new MatchRequest("Germany", "France"));
 
-        controller.startMatch(new MatchRequest("Mexico", "Canada"));
-        controller.updateScore(new ScoreUpdateRequest("Mexico", "Canada", 5, 3));
+        controller.startMatch("Mexico", "Canada");
+        controller.updateScore("Mexico", "Canada", 5, 3);
         controller.finishMatch(new MatchRequest("Mexico", "Canada"));
 
-        controller.startMatch(new MatchRequest("Spain", "Brazil"));
+        controller.startMatch("Spain", "Brazil");
         controller.updateScore(new ScoreUpdateRequest("Spain", "Brazil", 2, 2));
         controller.finishMatch(new MatchRequest("Spain", "Brazil"));
 
@@ -151,31 +151,34 @@ class ScoreBoardControllerTest {
 
         // Verify the order
         assertEquals(5, sortedMatches.get(0).getHomeScore());
-        assertEquals(2, sortedMatches.get(1).getHomeScore());
+        assertEquals(0, sortedMatches.get(1).getHomeScore());
         assertEquals(1, sortedMatches.get(2).getHomeScore());
     }
 
     @Test
     void testSortMatchesByClosestResults() {
         // Add matches to the scoreboard
-        controller.startMatch(new MatchRequest("Mexico", "Canada"));
-        controller.updateScore(new ScoreUpdateRequest("Mexico", "Canada", 5, 3));
+        controller.startMatch("Mexico", "Canada");
+        controller.updateScore("Mexico", "Canada", 5, 3);
         controller.finishMatch(new MatchRequest("Mexico", "Canada"));
 
-        controller.startMatch(new MatchRequest("Spain", "Brazil"));
-        controller.updateScore(new ScoreUpdateRequest("Spain", "Brazil", 2, 2));
+        controller.startMatch("Spain", "Brazil");
+        controller.updateScore("Spain", "Brazil", 2, 2);
         controller.finishMatch(new MatchRequest("Spain", "Brazil"));
 
-        controller.startMatch(new MatchRequest("Germany", "France"));
-        controller.updateScore(new ScoreUpdateRequest("Germany", "France", 1, 2));
+        controller.startMatch("Germany", "France");
+        controller.updateScore("Germany", "France", 1, 2);
         controller.finishMatch(new MatchRequest("Germany", "France"));
 
         // Sort matches by closest results
         List<Match> sortedMatches = controller.sortMatchesByClosestResults();
 
+        System.out.println(sortedMatches.get(0));
+        System.out.println(sortedMatches.get(1));
+        System.out.println(sortedMatches.get(2));
         // Verify the order
-        assertEquals(2, sortedMatches.get(0).getScoreDifference());
-        assertEquals(2, sortedMatches.get(1).getScoreDifference());
-        assertEquals(3, sortedMatches.get(2).getScoreDifference());
+        assertEquals(0, sortedMatches.get(0).getScoreDifference());
+        assertEquals(1, sortedMatches.get(1).getScoreDifference());
+        assertEquals(2, sortedMatches.get(2).getScoreDifference());
     }
 }

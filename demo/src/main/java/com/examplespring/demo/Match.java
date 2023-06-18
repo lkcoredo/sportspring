@@ -35,10 +35,16 @@ public class Match {
     }
 
     public Integer getScoreDifference() {
-        return null;
+        return Math.abs(homeTeamScore - awayTeamScore);
     }
 
     public Object getWinner() {
-        return null;
+        if (homeTeamScore > awayTeamScore) {
+            return homeTeam;
+        } else if (awayTeamScore > homeTeamScore) {
+            return awayTeam;
+        } else {
+            return "Draw";
+        }
     }
 }
