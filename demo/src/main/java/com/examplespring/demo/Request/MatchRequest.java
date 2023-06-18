@@ -6,6 +6,9 @@ public class MatchRequest {
 
     // Getters and setters
 
+    public MatchRequest(String string, String string2) {
+    }
+
     public String getHomeTeam() {
         return homeTeam;
     }

@@ -105,4 +105,20 @@ public class ScoreBoardController {
         return result;
 
     }
+
+    public List<Match> sortMatchesByClosestResults() {
+        return null;
+    }
+
+    public List<Match> sortMatchesByHigherResults() {
+        return null;
+    }
+
+    public List<Match> sortMatchesByAlphabeticalOrder() {
+        return null;
+    }
+
+    public List<Match> sortMatchesByWinner() {
+        return null;
+    }
 }

@@ -33,4 +33,12 @@ public class Match {
     public int getAwayScore() {
         return awayTeamScore;
     }
+
+    public Integer getScoreDifference() {
+        return null;
+    }
+
+    public Object getWinner() {
+        return null;
+    }
 }

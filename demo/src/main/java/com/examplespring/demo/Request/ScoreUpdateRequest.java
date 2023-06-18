@@ -8,6 +8,9 @@ public class ScoreUpdateRequest {
 
     // Getters and setters
 
+    public ScoreUpdateRequest(String string, String string2, int i, int j) {
+    }
+
     public String getHomeTeam() {
         return homeTeam;
     }
