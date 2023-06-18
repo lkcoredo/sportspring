@@ -1,9 +1,16 @@
-package com.examplespring.demo;
+package com.examplespring.demo.Controller;
 
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.examplespring.demo.Match;
+import com.examplespring.demo.ScoreBoard;
+import com.examplespring.demo.Request.MatchRequest;
+import com.examplespring.demo.Request.ScoreUpdateRequest;
 
 @RestController
 public class ScoreBoardController {
@@ -11,6 +18,34 @@ public class ScoreBoardController {
 
     public ScoreBoardController(ScoreBoard scoreBoard) {
         this.scoreBoard = scoreBoard;
+    }
+
+    @PostMapping("/startMatch")
+    public void startMatch(@RequestBody MatchRequest matchRequest) {
+        String homeTeam = matchRequest.getHomeTeam();
+        String awayTeam = matchRequest.getAwayTeam();
+        scoreBoard.startMatch(homeTeam, awayTeam);
+    }
+
+    @PostMapping("/updateScore")
+    public void updateScore(@RequestBody ScoreUpdateRequest scoreUpdateRequest) {
+        String homeTeam = scoreUpdateRequest.getHomeTeam();
+        String awayTeam = scoreUpdateRequest.getAwayTeam();
+        int homeScore = scoreUpdateRequest.getHomeScore();
+        int awayScore = scoreUpdateRequest.getAwayScore();
+        scoreBoard.updateScore(homeTeam, awayTeam, homeScore, awayScore);
+    }
+
+    @PostMapping("/finishMatch")
+    public void finishMatch(@RequestBody MatchRequest matchRequest) {
+        String homeTeam = matchRequest.getHomeTeam();
+        String awayTeam = matchRequest.getAwayTeam();
+        scoreBoard.finishMatch(homeTeam, awayTeam);
+    }
+
+    @GetMapping("/getSummary")
+    public List<Match> getSummary() {
+        return scoreBoard.getSummary();
     }
 
     // Start a match
@@ -26,11 +61,6 @@ public class ScoreBoardController {
     // Finish a match
     public void finishMatch(String homeTeam, String awayTeam) {
         scoreBoard.finishMatch(homeTeam, awayTeam);
-    }
-
-    // Get a summary
-    public List<Match> getSummary() {
-        return scoreBoard.getSummary();
     }
 
     @GetMapping("/scoreboard")
@@ -62,24 +92,17 @@ public class ScoreBoardController {
                     match.getAwayTeam(), match.getAwayScore());
         }
 
-        // Afficher le résumé
-        StringBuilder sb = new StringBuilder("Here the scoreboard: ");
+        StringBuilder sb = new StringBuilder("Here the scoreboard v3 : \n\n\n");
         for (int i = 0; i < summary.size(); i++) {
             Match match = summary.get(i);
-            sb.append(i + 1).append(". ")
-                    .append(match.getHomeTeam()).append(" ")
-                    .append(match.getHomeScore()).append(" - ")
-                    .append(match.getAwayTeam()).append(" ")
-                    .append(match.getAwayScore()).append("\n");
+            sb.append(" // \n\n\n"); // Ligne de séparation
+            String matchInfo = String.format("%d. %s %d - %s %d\n\n\n",
+                    i + 1, match.getHomeTeam(), match.getHomeScore(), match.getAwayTeam(), match.getAwayScore());
+            sb.append(matchInfo);
+            sb.append(" // \n\n\n");
         }
-
-        return sb.toString();
+        String result = sb.toString();
+        return result;
 
     }
-
-    // Injectez la dépendance de la classe ScoreBoard ici
-
-    // Définissez les endpoints REST pour les opérations requises
-    // (démarrer un match, mettre à jour le score, terminer un match, obtenir un
-    // résumé, etc.)
 }
